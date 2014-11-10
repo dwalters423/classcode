@@ -8,6 +8,9 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.font.Rectangle;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -54,7 +57,7 @@ public class Main extends SimpleApplication {
       //adds the Physics state to the application, sets the speed and global 
       //gravity variable.
         stateManager.attach(physicsState);
-        physicsState.setSpeed(4.5f);
+        physicsState.setSpeed(5f);
         physicsState.getPhysicsSpace().setGravity(earthGravity);
         
       //sets the view up. To disable flyCam, setEnabled(false) and comment setMoveSpeed.
@@ -71,6 +74,9 @@ public class Main extends SimpleApplication {
         
       //creates the GUI for display of sphere locations
         initGUI();
+        
+      //implements ActionListeners for keys
+        initActionListeners();
         
         
     } //end simpleInitApp
@@ -169,7 +175,6 @@ public class Main extends SimpleApplication {
         sphere1Controller.setPhysicsLocation(randomPhy.getRandomVector3f(100, 100, 100)); //location (random)
         sphere1Controller.setRestitution(0.7f); //bounciness
         sphere1Controller.setFriction(.5f);
-        sphere1Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
         sphereNode.attachChild(sphere1);
         
         Geometry sphere2 = new Geometry ("Sphere 2",ballMesh);
@@ -178,7 +183,6 @@ public class Main extends SimpleApplication {
         sphere2Controller.setPhysicsLocation(randomPhy.getRandomVector3f(100, 100, 100)); //location (random)
         sphere2Controller.setRestitution(0.7f); //bounciness
         sphere2Controller.setFriction(.5f);
-        sphere2Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));  //velocity (random)
         sphereNode.attachChild(sphere2);
         
         Geometry sphere3 = new Geometry ("Sphere 3",ballMesh);
@@ -187,7 +191,6 @@ public class Main extends SimpleApplication {
         sphere3Controller.setPhysicsLocation(randomPhy.getRandomVector3f(100, 100, 100)); //location(random)
         sphere3Controller.setRestitution(0.7f); //bounciness
         sphere3Controller.setFriction(.5f);
-        sphere3Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200)); //velocity  
         sphereNode.attachChild(sphere3);
         
       //Adds the sphere spatials to the physics state
@@ -226,6 +229,29 @@ public class Main extends SimpleApplication {
         sphere3Text.setLocalTranslation(400, sphere3Text.getHeight(), 0);
         guiNode.attachChild(sphere3Text);   
     }
+    
+    private void initActionListeners () {
+        
+      //add Mapping for input keys here.
+        inputManager.addMapping("Add velocity", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+      //add all key actions here and implement their action
+        
+        ActionListener mouseListener = new ActionListener() {
+            public void onAction (String name, boolean keyPressed, float tpf) {
+                
+              if (name.equals("Add velocity") && keyPressed){  
+                sphere1Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
+                sphere2Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
+                sphere3Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
+              }
+            } //end onAction
+        }; //end mouseListener
+        
+        //add the action listener to the inputManager
+            inputManager.addListener(mouseListener, "Add velocity");
+        
+        
+    } //end initActionListeners()
     
     @Override
     public void simpleUpdate(float tpf) {
