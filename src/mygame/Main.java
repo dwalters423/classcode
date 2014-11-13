@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -77,7 +78,7 @@ public class Main extends SimpleApplication {
         
       //implements ActionListeners for keys
         initActionListeners();
-        
+        //stateManager.attach(new VideoRecorderAppState());
         
     } //end simpleInitApp
     
@@ -234,22 +235,29 @@ public class Main extends SimpleApplication {
         
       //add Mapping for input keys here.
         inputManager.addMapping("Add velocity", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addMapping("Slow down", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
       //add all key actions here and implement their action
         
         ActionListener mouseListener = new ActionListener() {
             public void onAction (String name, boolean keyPressed, float tpf) {
                 
-              if (name.equals("Add velocity") && keyPressed){  
+              if (name.equals("Add velocity")){  
                 sphere1Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
                 sphere2Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
                 sphere3Controller.setLinearVelocity(randomPhy.getRandomVector3f(200, 200, 200));
               }
+              if (name.equals("Slow down") && keyPressed) {
+                physicsState.setSpeed(.05f); 
+              }
+              if (name.equals("Slow down") && !keyPressed) {
+                  physicsState.setSpeed(5f);
+              }
             } //end onAction
-        }; //end mouseListener
+        }; //end mouseListener      
         
         //add the action listener to the inputManager
             inputManager.addListener(mouseListener, "Add velocity");
-        
+            inputManager.addListener(mouseListener, "Slow down");
         
     } //end initActionListeners()
     
@@ -268,10 +276,10 @@ public class Main extends SimpleApplication {
         
       //runs the writeFile() method every second by checking if 1000 milliseconds
       //have passed by.
-        long currentTimer = System.currentTimeMillis() - initialTime;
-        if (currentTimer >= 1000) {
-            writeFile();
-        }
+//        long currentTimer = System.currentTimeMillis() - initialTime;
+//        if (currentTimer >= 1000) {
+//            writeFile();
+//        }
                         
     } //end simpleUpdate
     
